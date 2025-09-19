@@ -1,0 +1,36 @@
+[tools]
+uv = "latest"
+
+[env]
+_.file = '.env'
+
+[tasks.lint]
+run = "uv run ruff check ."
+
+[tasks.format]
+run = "uv run ruff format ."
+
+[tasks.type-check]
+run = "uv run mypy ."
+
+[tasks.test]
+depends = ["lint", "format", "type-check"]
+run = "uv run pytest tests/"
+
+[tasks."docker:temporal:start"]
+run = "docker compose up temporal -d"
+
+[tasks."docker:temporal:stop"]
+run = "docker compose down temporal"
+
+[tasks."docker:worker:start"]
+run = "docker compose up worker -d --no-recreate"
+
+[tasks."docker:worker:build"]
+run = "docker-compose build worker --no-cache"
+
+[tasks."docker:worker:stop"]
+run = "docker compose down worker"
+
+[tasks."docker:cli:start"]
+run = "docker compose up cli --no-recreate"

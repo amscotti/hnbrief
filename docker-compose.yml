@@ -1,0 +1,32 @@
+services:
+  temporal:
+    image: temporalio/temporal:latest
+    command: server start-dev --ip 0.0.0.0 --db-filename /data/temporal.db
+    ports:
+      - "7233:7233"  # Temporal gRPC endpoint
+      - "8233:8233"  # Temporal Web UI
+    volumes:
+      - ./data:/data  # SQLite database persistence
+
+  worker:
+    build: .
+    command: uv run src/hnbrief/worker.py
+    depends_on:
+      - temporal
+    env_file:
+      - .env
+    environment:
+      - TEMPORAL_SERVER_URL=temporal:7233
+    working_dir: /app
+
+  cli:
+    build: .
+    command: uv run src/hnbrief/cli.py
+    depends_on:
+      - temporal
+      - worker
+    env_file:
+      - .env
+    environment:
+      - TEMPORAL_SERVER_URL=temporal:7233
+    working_dir: /app

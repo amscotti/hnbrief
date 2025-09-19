@@ -1,0 +1,41 @@
+[project]
+name = "hnbrief"
+version = "0.1.0"
+description = "HackerNews daily brief generator using Temporal workflows"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aiohttp>=3.12.15",
+    "html2text>=2024.2.26",
+    "openai>=1.0.0",
+    "poml>=0.0.8",
+    "pydantic>=2.11.9",
+    "pydantic-settings>=2.10.1",
+    "temporalio>=1.18.0",
+]
+
+[project.scripts]
+hnbrief = "hnbrief.cli:main"
+hnbrief-worker = "hnbrief.worker:main"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.8.0",
+    "pytest>=8.4.2",
+    "pytest-asyncio>=1.2.0",
+    "pytest-mock>=3.15.1",
+    "ruff>=0.1.0",
+]
+
+[tool.mypy]
+strict = true
+mypy_path = "."
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/hnbrief"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+
